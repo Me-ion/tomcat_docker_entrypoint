@@ -37,13 +37,16 @@ stop(){
 		echo "$(date +'%F %T,%3N') ${warnLogPrefix} Triggering pre-stop thread dump" >> "$CATALINA_OUT"
 		kill -3 "$catalinaPid"
 	fi
+	
+	# add fancy shutdown logic here, e.g. calling application's shutdown endpoint so it returns a non 200 code
+	# will signall the load balancer to drain existing connections and not send any new traffic to the container/pod
 
 	echo "$(date +'%F %T,%3N') ${warnLogPrefix} Initiating tomcat stop" >> "$CATALINA_OUT"
 
 	catalina.sh stop "${waitBeforeJavaThreadDump}" >> "$CATALINA_OUT"
 	wait "$catalinaPid"
 
-  echo "$(date +'%F %T,%3N') ${warnLogPrefix} Completed tomcat stop" >> "$CATALINA_OUT"
+	echo "$(date +'%F %T,%3N') ${warnLogPrefix} Completed tomcat stop" >> "$CATALINA_OUT"
 
 	# give a sec for the tail to catch up with all the logs
 	sleep 1
