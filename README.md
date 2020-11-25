@@ -17,3 +17,6 @@ RUN chmod +x /tini
 
 ENTRYPOINT ["/tini", "--", "/docker-entrypoint.sh"]
 ```
+
+### Additional:
+Could also add more logic into the `stop()` function to call the application's shutdown endpoint (if implemented) to return a non 200 code, e.g. 500 and wait for a few seconds so that the load balancer drains the connections and does not send new connections to the continer/pod
